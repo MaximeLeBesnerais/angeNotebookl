@@ -193,15 +193,22 @@ bool add_contact(wrapper_contact *contacts) {
 }
 
 void adjust_index(wrapper_contact *contacts, short index) {
-    for (int i = index; i < 15; i++) {
+    free(contacts->list[index].name);
+    free(contacts->list[index].phone);
+    free(contacts->list[index].email);
+    for (int i = index; i < 14; i++) {
         if (contacts->list[i + 1].name == NULL) {
             contacts->list[i].name = NULL;
             contacts->list[i].phone = NULL;
             contacts->list[i].email = NULL;
-            contacts->size--;
-            return;
+            break;
         }
         contacts->list[i] = contacts->list[i + 1];
+    }
+    if (index < 14) {
+        contacts->list[14].name = NULL;
+        contacts->list[14].phone = NULL;
+        contacts->list[14].email = NULL;
     }
 }
 
