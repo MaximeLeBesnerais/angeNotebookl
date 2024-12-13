@@ -61,3 +61,9 @@ bool data_validation(contact *contacts) {
     }
     return true;
 }
+
+void red_text(char *text) {
+    puts("\033[1;31m");
+    puts(text);
+    puts("\033[0m");
+}
