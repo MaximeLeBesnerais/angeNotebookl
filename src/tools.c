@@ -7,20 +7,22 @@ void red_text(char *text) {
 }
 
 void display_menu() {
+    putchar('\n');
     printf("1. Add contact\n");
     printf("2. Delete contact\n");
-    printf("3. Search contact\n");
+    printf("3. Edit contact\n");
     printf("4. Display all contacts\n");
     printf("5. Exit\n");
 }
 
-int getFilterType(char *type) {
-    if (strcmp(type, "Business") == 0 || strcmp(type, "0") == 0) {
-        return 0;
-    } else if (strcmp(type, "Personal") == 0 || strcmp(type, "1") == 0) {
-        return 1;
-    } else if (strcmp(type, "Office") == 0 || strcmp(type, "2") == 0) {
-        return 2;
+contact_type getFilterType(char *type) {
+    int temp = atoi(type);
+    if (temp == 1) {
+        return BUSINESS;
+    } else if (temp == 2) {
+        return PERSONAL;
+    } else if (temp == 3) {
+        return OFFICE;
     }
-    return -1;
+    return UNKNOWN;
 }
