@@ -94,6 +94,9 @@ int main() {
             edit_contact(&contacts);
             break;
         case 4:
+            search_contact(&contacts);
+            break;
+        case 5:
             puts("Do you want to filter by type?");
             puts("Write 1 for Business, 2 for Personal, 3 for Office,"
                  " or any other key for all contacts");
@@ -101,7 +104,7 @@ int main() {
                 display_all_contacts(&contacts, UNKNOWN);
             display_all_contacts(&contacts, getFilterType(type));
             break;
-        case 5:
+        case 6:
             running = false;
             exit_process(contacts, file_ctx);
             break;
