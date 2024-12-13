@@ -14,9 +14,13 @@ char *printType(contact_type type) {
     }
 }
 
-void contact_print(contact contacts) {
-    printf("Name: %s, Phone: %s, Type: %s, Email: %s\n", contacts.name, 
-    contacts.phone, printType(contacts.type), contacts.email);
+void contact_print(contact contacts, bool print_all) {
+    printf("%s: %s", contacts.name, contacts.phone);
+    if (print_all) {
+        printf(", %s, %s\n", printType(contacts.type), contacts.email);
+    } else {
+        putchar('\n');
+    }
 }
 
 void print_book(wrapper_contact *contacts) {
@@ -25,13 +29,14 @@ void print_book(wrapper_contact *contacts) {
             continue;
         }
         printf("Index: %d", i + 1);
-        contact_print(contacts->list[i]);
+        contact_print(contacts->list[i], true);
     }
 }
 
 short read_book(contact *contacts, FILE *file) {
     char line[1024];
     int i = 0;
+    int temp = 0;
     while (fgets(line, 1024, file)) {
         char *name = strtok(line, ",");
         char *phone = strtok(NULL, ",");
@@ -41,8 +46,17 @@ short read_book(contact *contacts, FILE *file) {
         strcpy(contacts[i].name, name);
         contacts[i].phone = malloc(strlen(phone) + 1);
         strcpy(contacts[i].phone, phone);
-        contacts[i].type = atoi(type);
+        temp = atoi(type);
+        if (temp < 0 || temp > 2) {
+            contacts[i].type = UNKNOWN;
+        } else {
+            contacts[i].type = (contact_type)temp;
+        }
         contacts[i].email = malloc(strlen(email) + 1);
+        // remove newline character if present
+        if (email[strlen(email) - 1] == '\n') {
+            email[strlen(email) - 1] = '\0';
+        }
         strcpy(contacts[i].email, email);
         i++;
     }
@@ -60,13 +74,13 @@ bool data_validation(contact *contacts) {
             }
             if (strcmp(contacts[i].name, contacts[j].name) == 0 || 
                 strcmp(contacts[i].phone, contacts[j].phone) == 0) {
-                    contact_print(contacts[i]);
+                    contact_print(contacts[i], true);
                     printf("Name and phone number must be unique\n");
                 return false;
             }
         }
         if (strchr(contacts[i].email, '@') == NULL) {
-            contact_print(contacts[i]);
+            contact_print(contacts[i], true);
             printf("Email must contain '@'\n");
             return false;
         }
@@ -79,8 +93,8 @@ contact contact_form() {
     new_contact.name = malloc(50);
     new_contact.phone = malloc(15);
     new_contact.email = malloc(50);
-    puts("Enter contact information in the following format:\
-    Name, Phone, Type, Email");
+    puts("Enter contact information in the following format:"\
+    " Name, Phone, [1 for Business, 2 for Personal, 3 for Office], Email");
     char buffer[1024];
     if (fgets(buffer, 1024, stdin) == NULL) {
         puts("Could not read contact information\n");
@@ -116,6 +130,7 @@ bool add_contact(wrapper_contact *contacts) {
         if (contacts->list[i].name == NULL) {
             contacts->list[i] = new_contact;
             contacts->size++;
+            contacts->modified = true;
             return true;
         }
     }
@@ -153,6 +168,7 @@ bool delete_contact(wrapper_contact *contacts) {
             contacts->list[i].email = NULL;
             contacts->size--;
             adjust_index(contacts, i);
+            contacts->modified = true;
             return true;
         }
     }
@@ -160,15 +176,15 @@ bool delete_contact(wrapper_contact *contacts) {
     return false;
 }
 
-void display_all_contacts(wrapper_contact *contacts, int filter) {
+void display_all_contacts(wrapper_contact *contacts, contact_type filter) {
     for (int i = 0; i < 15; i++) {
         if (contacts->list[i].name == NULL) {
             continue;
         }
-        if ((filter != -1) && (contacts->list[i].type != filter)) {
+        if ((filter != UNKNOWN) && (contacts->list[i].type != filter)) {
             continue;
         }
-        contact_print(contacts->list[i]);
+        contact_print(contacts->list[i], (filter == UNKNOWN));
     }
 }
 
