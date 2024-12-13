@@ -2,8 +2,7 @@
 #include "contact_handling.h"
 #include "file_context.h"
 
-short data_setup(contact contacts[], FILE **file)
-{
+short data_setup(contact contacts[], FILE **file) {
     *file = fopen("contacts_book.csv", "a+");
     if (*file == NULL) {
         printf("Error opening file!\n");
