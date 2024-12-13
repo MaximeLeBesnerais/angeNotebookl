@@ -20,14 +20,6 @@ void data_setup(contact contacts[], FILE **file) {
     }
 }
 
-void display_menu() {
-    printf("1. Add contact\n");
-    printf("2. Delete contact\n");
-    printf("3. Search contact\n");
-    printf("4. Display all contacts\n");
-    printf("5. Exit\n");
-}
-
 int main() {
     FILE *file;
     contact contacts[15];
