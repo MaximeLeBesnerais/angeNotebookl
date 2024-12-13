@@ -32,7 +32,6 @@ char *printType(contact_type type);
 void contact_print(contact contacts, bool print_all);
 short read_book(contact *contacts, FILE *file);
 bool data_validation(contact *contacts);
-void print_book(wrapper_contact *contacts);
 bool add_contact(wrapper_contact *contacts);
 bool delete_contact(wrapper_contact *contacts);
 void display_all_contacts(wrapper_contact *contacts, contact_type filter);

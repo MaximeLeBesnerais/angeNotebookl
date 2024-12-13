@@ -18,5 +18,7 @@ void blue_text(char *text);
 void display_menu();
 contact_type getFilterType(char *type);
 void clear_screen();
+bool lazyMatch(char *ref, char *match);
+char *pure_text(char *text);
 
 #endif // HELPERS_H
