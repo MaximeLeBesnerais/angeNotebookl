@@ -1,7 +1,7 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror
 NAME = phonebook
-SRC = src/$(wildcard *.c)
+SRC = $(wildcard src/*.c)
 INC = -I include
 
 all: $(NAME)
