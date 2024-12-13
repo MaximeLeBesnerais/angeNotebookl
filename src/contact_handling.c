@@ -28,7 +28,6 @@ contact contact_form() {
     char *phone = strtok(NULL, ",");
     char *purity_phone = pure_text(phone);
     char *type = strtok(NULL, ",");
-    char *purity_type = pure_text(type);
     char *email = strtok(NULL, ",");
     char *purity_email = pure_text(email);
     strcpy(new_contact.name, purity_name);
@@ -41,14 +40,6 @@ contact contact_form() {
         new_contact.type = (contact_type)type_int;
     }
     strcpy(new_contact.email, purity_email);
-    free(purity_name);
-    free(purity_phone);
-    free(purity_type);
-    free(purity_email);
-    free(name);
-    free(phone);
-    free(type);
-    free(email);
     return new_contact;
 }
 
