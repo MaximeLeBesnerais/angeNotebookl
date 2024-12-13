@@ -131,10 +131,20 @@ contact contact_form() {
     new_contact.phone = malloc(15);
     new_contact.email = malloc(50);
     puts("Enter contact information in the following format:"\
-    " Name, Phone, [1 for Business, 2 for Personal, 3 for Office], Email");
+    " Name, Phone, [1 for Business, 2 for Personal, 3 for Office], Email\n"\
+    "Enter exit to cancel");
     char buffer[1024];
     if (fgets(buffer, 1024, stdin) == NULL) {
         puts("Could not read contact information\n");
+        return new_contact;
+    }
+    if (lazyMatch(pure_text(buffer), "exit")) {
+        new_contact.name = NULL;
+        return new_contact;
+    }
+    if (strchr(buffer, ',') == NULL || strchr(strchr(buffer, ',') + 1, ',') == NULL ||
+        strchr(strchr(strchr(buffer, ',') + 1, ',') + 1, ',') == NULL) {
+        new_contact.name = NULL;
         return new_contact;
     }
     char *name = strtok(buffer, ",");
@@ -236,15 +246,48 @@ bool delete_contact(wrapper_contact *contacts) {
 
 void display_all_contacts(wrapper_contact *contacts, contact_type filter) {
     short count = 1;
-    for (int i = 0; i < 15; i++) {
-        if (contacts->list[i].name == NULL) {
-            continue;
+    // First print Office contacts except if filter is unknown or office
+    bool is_office = filter == OFFICE;
+    bool is_personal = filter == PERSONAL;
+    bool is_business = filter == BUSINESS;
+    if (is_office|| filter == UNKNOWN) {
+        blue_text("--- Office Contacts ---\n");
+        for (int i = 0; i < 15; i++) {
+            if (contacts->list[i].name == NULL) {
+                continue;
+            }
+            if (contacts->list[i].type == OFFICE) {
+                printf("%d. ", count);
+                contact_print(contacts->list[i], !is_office);
+                count++;
+            }
         }
-        if ((filter != UNKNOWN) && (contacts->list[i].type != filter)) {
-            continue;
+    }
+    if (is_personal || filter == UNKNOWN) {
+        blue_text("--- Personal Contacts ---\n");
+        for (int i = 0; i < 15; i++) {
+            if (contacts->list[i].name == NULL) {
+                continue;
+            }
+            if (contacts->list[i].type == PERSONAL) {
+                printf("%d. ", count);
+                contact_print(contacts->list[i], !is_personal);
+                count++;
+            }
         }
-        printf("%d. ", count++);
-        contact_print(contacts->list[i], (filter == UNKNOWN));
+    }
+    if (is_business || filter == UNKNOWN) {
+        blue_text("--- Business Contacts ---\n");
+        for (int i = 0; i < 15; i++) {
+            if (contacts->list[i].name == NULL) {
+                continue;
+            }
+            if (contacts->list[i].type == BUSINESS) {
+                printf("%d. ", count);
+                contact_print(contacts->list[i], !is_business);
+                count++;
+            }
+        }
     }
 }
 

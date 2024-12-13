@@ -19,7 +19,6 @@ void blue_text(char *text) {
 }
 
 void display_menu() {
-    putchar('\n');
     printf("1. Add contact\n");
     printf("2. Delete contact\n");
     printf("3. Edit contact\n");

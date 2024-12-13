@@ -1,7 +1,7 @@
 #include "tools.h"
 #include "contact_handling.h"
 
-void data_setup(contact contacts[], FILE **file)
+short data_setup(contact contacts[], FILE **file)
 {
     *file = fopen("contacts_book.csv", "a+");
     if (*file == NULL) {
@@ -21,6 +21,7 @@ void data_setup(contact contacts[], FILE **file)
         fclose(*file);
         exit(1);
     }
+    return size;
 }
 
 bool write_to_file(contact contacts[], FILE *file) {
@@ -60,12 +61,15 @@ void exit_process(wrapper_contact contacts, FILE *file) {
 }
 
 int main() {
+    clear_screen();
     FILE *file;
     wrapper_contact contacts;
-    data_setup(contacts.list, &file);
+    short size = data_setup(contacts.list, &file);
+    contacts.size = size;
     bool running = true;
     short option;
     char type[10];
+    green_text("Welcome to the Phonebook\n");
 
     while (running) {
         display_menu();
@@ -105,6 +109,9 @@ int main() {
             break;
         }
         buffer[0] = '\0';
+        puts("Press any key to continue...");
+        getchar();
+        clear_screen();
     }
     fclose(file);
     return 0;

@@ -13,6 +13,8 @@
 #include "contact_handling.h"
 
 void red_text(char *text);
+void green_text(char *text);
+void blue_text(char *text);
 void display_menu();
 contact_type getFilterType(char *type);
 void clear_screen();
