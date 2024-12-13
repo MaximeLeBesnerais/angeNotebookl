@@ -28,6 +28,7 @@ int main() {
     data_setup(contacts.list, &file);
     bool running = true;
     short option;
+    char type[10];
 
     while (running) {
         display_menu();
@@ -41,16 +42,26 @@ int main() {
         option = atoi(buffer);
         switch (option) {
             case 1:
-                puts("Add contact\n");
+                if (!add_contact(&contacts)) {
+                    puts("There might be an error with the source file\n");
+                }
                 break;
             case 2:
-                puts("Delete contact\n");
+                if (!delete_contact(&contacts)) {
+                    puts("There might be an error with the source file\n");
+                }
                 break;
             case 3:
                 puts("Search contact\n");
                 break;
             case 4:
-                puts("Display all contacts\n");
+                puts("Do you want to filter by type?");
+                puts("Write Business, Personal, Office (or 0, 1, 2)\
+                 to filter by type");
+                 puts("Write any other key to display all contacts");
+                if (fgets(type, 10, stdin) == NULL) {
+                    display_all_contacts(&contacts, -1);
+                }
                 break;
             case 5:
                 running = false;
