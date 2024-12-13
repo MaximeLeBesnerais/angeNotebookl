@@ -327,3 +327,25 @@ bool edit_contact(wrapper_contact *contacts) {
     puts("Contact not found\n");
     return false;
 }
+
+bool search_contact(wrapper_contact *contacts) {
+    puts("Enter name to search: ");
+    char name[50];
+    if (fgets(name, 50, stdin) == NULL) {
+        puts("Could not read name\n");
+        return false;
+    }
+    char *processed_name = pure_text(name);
+    for (int i = 0; i < 15; i++) {
+        if (contacts->list[i].name == NULL) {
+            continue;
+        }
+        if (lazyMatch(contacts->list[i].name, processed_name)) {
+            puts("Contact found:");
+            contact_print(contacts->list[i], true);
+            return true;
+        }
+    }
+    puts("Contact not found\n");
+    return false;
+}
