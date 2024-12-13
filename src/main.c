@@ -62,6 +62,7 @@ int main() {
                 if (fgets(type, 10, stdin) == NULL) {
                     display_all_contacts(&contacts, -1);
                 }
+                display_all_contacts(&contacts, getFilterType(type));
                 break;
             case 5:
                 running = false;
