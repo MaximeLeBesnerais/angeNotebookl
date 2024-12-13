@@ -8,7 +8,8 @@ typedef enum
 {
     BUSINESS,
     PERSONAL,
-    OFFICE
+    OFFICE,
+    UNKNOWN
 } contact_type;
 
 typedef struct
@@ -17,7 +18,6 @@ typedef struct
     char *phone;
     contact_type type;
     char *email;
-    short entry;
 } contact;
 
 typedef struct wrapper_contact_s
@@ -31,5 +31,10 @@ char *printType(contact_type type);
 void contact_print(contact contacts);
 short read_book(contact *contacts, FILE *file);
 bool data_validation(contact *contacts);
+void print_book(wrapper_contact *contacts);
+bool add_contact(wrapper_contact *contacts);
+bool delete_contact(wrapper_contact *contacts);
+void display_all_contacts(wrapper_contact *contacts, int filter);
+bool edit_contact(wrapper_contact *contacts);
 
 #endif /* CONTACT_HANDLING_H_ */
