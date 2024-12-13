@@ -19,11 +19,12 @@ void blue_text(char *text) {
 }
 
 void display_menu() {
-    printf("1. Add contact\n");
-    printf("2. Delete contact\n");
-    printf("3. Edit contact\n");
-    printf("4. Display all contacts\n");
-    printf("5. Exit\n");
+    puts("1. Add contact");
+    puts("2. Delete contact");
+    puts("3. Edit contact");
+    puts("4. Search contact");
+    puts("5. Display all contacts");
+    puts("6. Exit");
 }
 
 void clear_screen() {
