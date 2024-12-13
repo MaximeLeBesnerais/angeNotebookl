@@ -1,12 +1,13 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror
 NAME = phonebook
-SRC = $(wildcard *.c)
+SRC = src/$(wildcard *.c)
+INC = -I include
 
 all: $(NAME)
 
 $(NAME): $(SRC)
-	@$(CC) $(CFLAGS) $(SRC) -o $(NAME)
+	@$(CC) $(CFLAGS) $(SRC) $(INC) -o $(NAME)
 
 clean:
 	@rm -f $(NAME)
