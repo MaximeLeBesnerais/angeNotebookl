@@ -26,3 +26,8 @@ contact_type getFilterType(char *type) {
     }
     return UNKNOWN;
 }
+
+void clear_screen() {
+    printf("\033[2J\033[1;1H");  // Clear screen and move cursor to top-left
+    fflush(stdout);
+}

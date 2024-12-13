@@ -15,5 +15,6 @@
 void red_text(char *text);
 void display_menu();
 contact_type getFilterType(char *type);
+void clear_screen();
 
 #endif // HELPERS_H

@@ -39,6 +39,7 @@ int main() {
             fclose(file);
             exit(0);
         }
+        clear_screen();
         option = atoi(buffer);
         switch (option) {
             case 1:

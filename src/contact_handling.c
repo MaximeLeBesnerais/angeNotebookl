@@ -33,6 +33,32 @@ void print_book(wrapper_contact *contacts) {
     }
 }
 
+bool lazyMatch(char *ref, char *match) {
+    short ref_len = strlen(ref);
+    short match_len = strlen(match);
+    if (ref_len != match_len) {
+        return false;
+    }
+    for (int i = 0; i < ref_len; i++) {
+        if (ref[i] != match[i]) {
+            return false;
+        }
+    }
+    return true;
+}
+
+char *pure_text(char *text) {
+    char *new_text = malloc(strlen(text) + 1);
+    if (text[strlen(text) - 1] == '\n') {
+        text[strlen(text) - 1] = '\0';
+    }
+    while (*text == ' ') {
+        text++;
+    }
+    strcpy(new_text, text);
+    return new_text;
+}
+
 short read_book(contact *contacts, FILE *file) {
     char line[1024];
     int i = 0;
@@ -43,9 +69,9 @@ short read_book(contact *contacts, FILE *file) {
         char *type = strtok(NULL, ",");
         char *email = strtok(NULL, ",");
         contacts[i].name = malloc(strlen(name) + 1);
-        strcpy(contacts[i].name, name);
+        strcpy(contacts[i].name, pure_text(name));
         contacts[i].phone = malloc(strlen(phone) + 1);
-        strcpy(contacts[i].phone, phone);
+        strcpy(contacts[i].phone, pure_text(phone));
         temp = atoi(type);
         if (temp < 0 || temp > 2) {
             contacts[i].type = UNKNOWN;
@@ -53,16 +79,27 @@ short read_book(contact *contacts, FILE *file) {
             contacts[i].type = (contact_type)temp;
         }
         contacts[i].email = malloc(strlen(email) + 1);
-        // remove newline character if present
         if (email[strlen(email) - 1] == '\n') {
             email[strlen(email) - 1] = '\0';
         }
-        strcpy(contacts[i].email, email);
+        strcpy(contacts[i].email, pure_text(email));
         i++;
     }
     return i;
 }
 
+bool check_duplicate(wrapper_contact *contacts, contact new_contact) {
+    for (int i = 0; i < 15; i++) {
+        if (contacts->list[i].name == NULL) {
+            continue;
+        }
+        if (lazyMatch(contacts->list[i].name, new_contact.name) ||
+            lazyMatch(contacts->list[i].phone, new_contact.phone)) {
+            return true;
+        }
+    }
+    return false;
+}
 bool data_validation(contact *contacts) {
     for (int i = 0; i < 15; i++) {
         if (contacts[i].name == NULL) {
@@ -72,10 +109,10 @@ bool data_validation(contact *contacts) {
             if (contacts[j].name == NULL) {
                 continue;
             }
-            if (strcmp(contacts[i].name, contacts[j].name) == 0 || 
-                strcmp(contacts[i].phone, contacts[j].phone) == 0) {
-                    contact_print(contacts[i], true);
-                    printf("Name and phone number must be unique\n");
+            if (lazyMatch(contacts[i].name, contacts[j].name) ||
+                lazyMatch(contacts[i].phone, contacts[j].phone)) {
+                contact_print(contacts[i], true);
+                printf("Duplicate contact found\n");
                 return false;
             }
         }
@@ -107,9 +144,11 @@ contact contact_form() {
     strcpy(new_contact.name, name);
     strcpy(new_contact.phone, phone);
     int type_int = atoi(type);
-    if (type_int < 0 || type_int > 2) {
+    if (type_int < 1 || type_int > 3) {
         puts("Invalid contact type\n");
         new_contact.type = UNKNOWN;
+    } else {
+        new_contact.type = (contact_type)type_int;
     }
     strcpy(new_contact.email, email);
     return new_contact;
@@ -122,8 +161,13 @@ bool add_contact(wrapper_contact *contacts) {
     }
     contact new_contact = contact_form();
     if (new_contact.name == NULL || new_contact.phone == NULL ||
-        new_contact.email == NULL || new_contact.type == UNKNOWN) {
+        new_contact.email == NULL || new_contact.type == UNKNOWN ||
+        strchr(new_contact.email, '@') == NULL) {
             red_text("Invalid contact information\n");
+        return false;
+    }
+    if (check_duplicate(contacts, new_contact)) {
+        red_text("Duplicate contact found\n");
         return false;
     }
     for (int i = 0; i < 15; i++) {
@@ -199,7 +243,7 @@ bool edit_contact(wrapper_contact *contacts) {
         if (contacts->list[i].name == NULL) {
             continue;
         }
-        if (strcmp(contacts->list[i].name, name) == 0) {
+        if (lazyMatch(contacts->list[i].name, name)) {
             contact new_contact = contact_form();
             if (new_contact.name == NULL || new_contact.phone == NULL ||
                 new_contact.email == NULL || new_contact.type == UNKNOWN) {
@@ -207,6 +251,7 @@ bool edit_contact(wrapper_contact *contacts) {
                 return false;
             }
             contacts->list[i] = new_contact;
+            contacts->modified = true;
             return true;
         }
     }
