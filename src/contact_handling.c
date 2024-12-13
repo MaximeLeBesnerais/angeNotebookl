@@ -1,4 +1,4 @@
-#include "helpers.h"
+#include "tools.h"
 #include "contact_handling.h"
 
 char *printType(contact_type type) {

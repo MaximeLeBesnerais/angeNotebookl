@@ -57,9 +57,6 @@ int main() {
                 puts("Invalid option!\n");
                 break;
         }
-        for (int i = 0; i < 10; i++) {
-            buffer[i] = 0;
-        }
     }
     return 0;
 }
