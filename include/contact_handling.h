@@ -20,9 +20,16 @@ typedef struct
     short entry;
 } contact;
 
+typedef struct wrapper_contact_s
+{
+    contact list[15];
+    short size;
+} wrapper_contact;
+
+
 char *printType(contact_type type);
 void contact_print(contact contacts);
-void read_book(contact *contacts, FILE *file);
+short read_book(contact *contacts, FILE *file);
 bool data_validation(contact *contacts);
 
 #endif /* CONTACT_HANDLING_H_ */

@@ -12,8 +12,8 @@ void data_setup(contact contacts[], FILE **file) {
         contacts[i].phone = NULL;
         contacts[i].email = NULL;
     }
-    read_book(contacts, *file);
-    if (!data_validation(contacts)) {
+    short size = read_book(contacts, *file);
+    if (!data_validation(contacts) || size > 15) {
         red_text("Data validation failed\n");
         fclose(*file);
         exit(1);
@@ -22,8 +22,8 @@ void data_setup(contact contacts[], FILE **file) {
 
 int main() {
     FILE *file;
-    contact contacts[15];
-    data_setup(contacts, &file);
+    wrapper_contact contacts;
+    data_setup(contacts.list, &file);
     bool running = true;
     short option;
 
@@ -32,7 +32,7 @@ int main() {
         puts("Enter an option: ");
         char buffer[10];
         if (fgets(buffer, 10, stdin) == NULL) {
-            puts("Error reading input\n");
+            puts("Exit key pressed\n");
             fclose(file);
             exit(1);
         }

@@ -19,7 +19,7 @@ void contact_print(contact contacts) {
     contacts.phone, printType(contacts.type), contacts.email);
 }
 
-void read_book(contact *contacts, FILE *file) {
+short read_book(contact *contacts, FILE *file) {
     char line[1024];
     int i = 0;
     while (fgets(line, 1024, file)) {
@@ -36,6 +36,7 @@ void read_book(contact *contacts, FILE *file) {
         strcpy(contacts[i].email, email);
         i++;
     }
+    return i;
 }
 
 bool data_validation(contact *contacts) {
@@ -62,3 +63,4 @@ bool data_validation(contact *contacts) {
     }
     return true;
 }
+
