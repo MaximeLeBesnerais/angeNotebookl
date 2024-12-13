@@ -141,8 +141,8 @@ contact contact_form() {
     char *phone = strtok(NULL, ",");
     char *type = strtok(NULL, ",");
     char *email = strtok(NULL, ",");
-    strcpy(new_contact.name, name);
-    strcpy(new_contact.phone, phone);
+    strcpy(new_contact.name, pure_text(name));
+    strcpy(new_contact.phone, pure_text(phone));
     int type_int = atoi(type);
     if (type_int < 1 || type_int > 3) {
         puts("Invalid contact type\n");
@@ -150,12 +150,12 @@ contact contact_form() {
     } else {
         new_contact.type = (contact_type)type_int;
     }
-    strcpy(new_contact.email, email);
+    strcpy(new_contact.email, pure_text(email));
     return new_contact;
 }
 
 bool add_contact(wrapper_contact *contacts) {
-    if (contacts->size == 15) {
+    if (contacts->size >= 15) {
         puts("Phonebook is full\n");
         return false;
     }
@@ -198,15 +198,29 @@ void adjust_index(wrapper_contact *contacts, short index) {
 bool delete_contact(wrapper_contact *contacts) {
     puts("Enter name to delete: ");
     char name[50];
+    char *processed_name;
     if (fgets(name, 50, stdin) == NULL) {
         puts("Could not read name\n");
         return false;
     }
+    processed_name = pure_text(name);
     for (int i = 0; i < 15; i++) {
         if (contacts->list[i].name == NULL) {
             continue;
         }
-        if (strcmp(contacts->list[i].name, name) == 0) {
+        if (strcmp(contacts->list[i].name, processed_name) == 0) {
+            puts("You are about to delete the following contact:");
+            contact_print(contacts->list[i], true);
+            puts("Are you sure you want to delete this contact? (y/[n])");
+            char buffer[10];
+            if (fgets(buffer, 10, stdin) == NULL) {
+                puts("Could not read input\n");
+                return false;
+            }
+            if (buffer[0] != 'y') {
+                puts("Contact not deleted\n");
+                return false;
+            }
             contacts->list[i].name = NULL;
             contacts->list[i].phone = NULL;
             contacts->list[i].email = NULL;
@@ -221,6 +235,7 @@ bool delete_contact(wrapper_contact *contacts) {
 }
 
 void display_all_contacts(wrapper_contact *contacts, contact_type filter) {
+    short count = 1;
     for (int i = 0; i < 15; i++) {
         if (contacts->list[i].name == NULL) {
             continue;
@@ -228,6 +243,7 @@ void display_all_contacts(wrapper_contact *contacts, contact_type filter) {
         if ((filter != UNKNOWN) && (contacts->list[i].type != filter)) {
             continue;
         }
+        printf("%d. ", count++);
         contact_print(contacts->list[i], (filter == UNKNOWN));
     }
 }
@@ -239,11 +255,14 @@ bool edit_contact(wrapper_contact *contacts) {
         puts("Could not read name\n");
         return false;
     }
+    char *processed_name = pure_text(name);
     for (int i = 0; i < 15; i++) {
         if (contacts->list[i].name == NULL) {
             continue;
         }
-        if (lazyMatch(contacts->list[i].name, name)) {
+        if (lazyMatch(contacts->list[i].name, processed_name)) {
+            puts("You are about to edit the following contact:");
+            contact_print(contacts->list[i], true);
             contact new_contact = contact_form();
             if (new_contact.name == NULL || new_contact.phone == NULL ||
                 new_contact.email == NULL || new_contact.type == UNKNOWN) {
