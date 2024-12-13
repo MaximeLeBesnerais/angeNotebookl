@@ -100,6 +100,7 @@ bool check_duplicate(wrapper_contact *contacts, contact new_contact) {
     }
     return false;
 }
+
 bool data_validation(contact *contacts) {
     for (int i = 0; i < 15; i++) {
         if (contacts[i].name == NULL) {
@@ -253,7 +254,6 @@ bool delete_contact(wrapper_contact *contacts) {
 
 void display_all_contacts(wrapper_contact *contacts, contact_type filter) {
     short count = 1;
-    // First print Office contacts except if filter is unknown or office
     bool is_office = filter == OFFICE;
     bool is_personal = filter == PERSONAL;
     bool is_business = filter == BUSINESS;
