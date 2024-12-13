@@ -6,15 +6,15 @@ SRC = $(wildcard *.c)
 all: $(NAME)
 
 $(NAME): $(SRC)
-	$(CC) $(CFLAGS) $(SRC) -o $(NAME)
+	@$(CC) $(CFLAGS) $(SRC) -o $(NAME)
 
 clean:
-	rm -f $(NAME)
+	@rm -f $(NAME)
 
 re: clean all
 
 run:
-	./$(NAME)
+	@./$(NAME)
 
 crun: clean all run
 
