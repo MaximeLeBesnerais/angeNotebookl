@@ -13,7 +13,9 @@ void data_setup(contact contacts[], FILE **file) {
         contacts[i].email = NULL;
     }
     short size = read_book(contacts, *file);
-    if (!data_validation(contacts) || size > 15) {
+    if (size > 15 || !data_validation(contacts)) {
+        (size > 15) ? puts("Phonebook has overflowed\n") : puts("");
+        (size > 15) ? red_text("Data overflow\n") : puts("");
         red_text("Data validation failed\n");
         fclose(*file);
         exit(1);
