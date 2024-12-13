@@ -13,5 +13,6 @@
 
 void red_text(char *text);
 void display_menu();
+int getFilterType(char *type);
 
 #endif // HELPERS_H
