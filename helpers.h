@@ -26,7 +26,7 @@ typedef struct
     char *email;
 } contact;
 
-void contact_print(contact *contacts);
+void contact_print(contact contacts);
 void read_book(contact *contacts, FILE *file);
 bool data_validation(contact *contacts);
 
