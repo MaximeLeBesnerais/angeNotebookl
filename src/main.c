@@ -37,7 +37,7 @@ int main() {
         if (fgets(buffer, 10, stdin) == NULL) {
             puts("Exit key pressed\n");
             fclose(file);
-            exit(1);
+            exit(0);
         }
         option = atoi(buffer);
         switch (option) {
@@ -52,15 +52,16 @@ int main() {
                 }
                 break;
             case 3:
-                puts("Search contact\n");
+                if (!edit_contact(&contacts)) {
+                    puts("There might be an error with the source file\n");
+                }
                 break;
             case 4:
                 puts("Do you want to filter by type?");
-                puts("Write Business, Personal, Office (or 0, 1, 2)\
-                 to filter by type");
-                 puts("Write any other key to display all contacts");
+                puts("Write 1 for Business, 2 for Personal, 3 for Office,"\
+                " or any other key for all contacts");
                 if (fgets(type, 10, stdin) == NULL) {
-                    display_all_contacts(&contacts, -1);
+                    display_all_contacts(&contacts, UNKNOWN);
                 }
                 display_all_contacts(&contacts, getFilterType(type));
                 break;
