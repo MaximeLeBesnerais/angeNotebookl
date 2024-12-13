@@ -6,6 +6,18 @@ void red_text(char *text) {
     puts("\033[0m");
 }
 
+void green_text(char *text) {
+    puts("\033[1;32m");
+    puts(text);
+    puts("\033[0m");
+}
+
+void blue_text(char *text) {
+    puts("\033[1;34m");
+    puts(text);
+    puts("\033[0m");
+}
+
 void display_menu() {
     putchar('\n');
     printf("1. Add contact\n");
