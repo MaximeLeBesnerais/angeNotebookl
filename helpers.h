@@ -24,10 +24,12 @@ typedef struct
     char *phone;
     contact_type type;
     char *email;
+    short entry;
 } contact;
 
 void contact_print(contact contacts);
 void read_book(contact *contacts, FILE *file);
 bool data_validation(contact *contacts);
+void red_text(char *text);
 
 #endif // HELPERS_H
