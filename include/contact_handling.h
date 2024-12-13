@@ -32,9 +32,14 @@ char *printType(contact_type type);
 void contact_print(contact contacts, bool print_all);
 short read_book(contact *contacts, FILE *file);
 bool data_validation(contact *contacts);
+//---------------------------------------------------------
 bool add_contact(wrapper_contact *contacts);
 bool delete_contact(wrapper_contact *contacts);
-void display_all_contacts(wrapper_contact *contacts, contact_type filter);
 bool edit_contact(wrapper_contact *contacts);
+bool search_contact(wrapper_contact *contacts);
+//---------------------------------------------------------
+contact contact_form();
+void adjust_index(wrapper_contact *contacts, short index);
+void display_all_contacts(wrapper_contact *contacts, contact_type filter);
 
 #endif /* CONTACT_HANDLING_H_ */
