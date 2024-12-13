@@ -2,6 +2,8 @@
 #define FILE_CONTEXT_H
 #include <stdio.h>
 #include <stdbool.h>
+#include <stdlib.h>
+#include <string.h>
 
 typedef struct file_context {
     FILE* handle;

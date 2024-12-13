@@ -1,5 +1,6 @@
 #include "tools.h"
 #include "contact_handling.h"
+#include "file_context.h"
 
 short data_setup(contact contacts[], FILE **file)
 {
@@ -24,29 +25,25 @@ short data_setup(contact contacts[], FILE **file)
     return size;
 }
 
-bool write_to_file(contact contacts[], FILE *file) {
-    fclose(file);
-    file = fopen("contacts_book.csv", "w+");
-    if (file == NULL) {
+bool write_to_file(contact contacts[], file_context *ctx) {
+    if (!open_file(ctx, "w+")) {
         red_text("Critical error opening file\n");
         exit(1);
     }
-    rewind(file);
     for (int i = 0; i < 15; i++) {
         if (contacts[i].name == NULL)
             continue;
-        fprintf(file, "%s, %s, %d, %s\n", contacts[i].name, contacts[i].phone,
+        fprintf(ctx->handle, "%s, %s, %d, %s\n", contacts[i].name, contacts[i].phone,
                 contacts[i].type, contacts[i].email);
     }
-    fclose(file);
-    file = fopen("contacts_book.csv", "a+");
-    return true;
+    close_file(ctx);
+    return open_file(ctx, "a+");
 }
 
-void exit_process(wrapper_contact contacts, FILE *file) {
+void exit_process(wrapper_contact contacts, file_context *ctx) {
     puts("Exit key pressed\n");
     if (contacts.modified) {
-        write_to_file(contacts.list, file);
+        write_to_file(contacts.list, ctx);
         puts("All contacts saved\n");
     }
     for (int i = 0; i < 15; i++)
@@ -62,9 +59,14 @@ void exit_process(wrapper_contact contacts, FILE *file) {
 
 int main() {
     clear_screen();
-    FILE *file;
+    file_context *file_ctx = create_file_context("contacts_book.csv");
     wrapper_contact contacts;
-    short size = data_setup(contacts.list, &file);
+    if (!open_file(file_ctx, "a+")) {
+        red_text("Error creating file context\n");
+        free(file_ctx);
+        return(1);
+    }
+    short size = data_setup(contacts.list, &file_ctx->handle);
     contacts.size = size;
     bool running = true;
     short option;
@@ -76,7 +78,7 @@ int main() {
         puts("Enter an option: ");
         char buffer[10];
         if (fgets(buffer, 10, stdin) == NULL) {
-            exit_process(contacts, file);
+            exit_process(contacts, file_ctx);
             running = false;
             break;
         }
@@ -102,7 +104,7 @@ int main() {
             break;
         case 5:
             running = false;
-            exit_process(contacts, file);
+            exit_process(contacts, file_ctx);
             break;
         default:
             puts("Invalid option!\n");
@@ -113,6 +115,10 @@ int main() {
         getchar();
         clear_screen();
     }
-    fclose(file);
+    if (file_ctx) {
+        close_file(file_ctx);
+        free(file_ctx->filename);
+        free(file_ctx);
+    }
     return 0;
 }
