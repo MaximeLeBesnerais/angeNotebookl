@@ -10,9 +10,10 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
+#include "contact_handling.h"
 
 void red_text(char *text);
 void display_menu();
-int getFilterType(char *type);
+contact_type getFilterType(char *type);
 
 #endif // HELPERS_H
